@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace webapi_jwtauthsample.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
