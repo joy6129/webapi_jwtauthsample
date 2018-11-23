@@ -24,6 +24,16 @@ namespace webapi_jwtauthsample
         }
         public IConfiguration Configuration { get;}
 
+        // create a customize token life time validator
+        private bool CustomLifetimeValidator(DateTime? notBefore, DateTime? expires, SecurityToken tokenToValidate, TokenValidationParameters @param)
+        {
+            if (expires != null)
+            {
+                return expires > DateTime.UtcNow;
+            }
+            return false;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -34,8 +44,9 @@ namespace webapi_jwtauthsample
                     ValidateIssuer=true,
                     ValidateAudience=true,
                     ValidateIssuerSigningKey=true,
-                    ValidIssuer="Joy.com",
-                    ValidAudience="Joy.com",
+                    ValidIssuer="JoyLin",
+                    ValidAudience="JoyLin",    
+                    LifetimeValidator = CustomLifetimeValidator, // Add token expire check
                     IssuerSigningKey=  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("MyConfig").GetSection("JWTSecurityKey").Value))                   
                 };
             });
