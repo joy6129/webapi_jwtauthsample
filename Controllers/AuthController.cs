@@ -34,7 +34,12 @@ namespace webapi_jwtauthsample.Controllers
                 // Todo: check in DB username and pass exist
                 if (usernameAndPass[0] == "Admin" && usernameAndPass[1] == "pass")
                 {
-                    var claimsdata = new[] { new Claim(ClaimTypes.Name, usernameAndPass[0]) };
+                    var claimsdata = new[] 
+                    { 
+                        new Claim(ClaimTypes.Name, usernameAndPass[0]),
+                        new Claim(ClaimTypes.Role, "Admin"),
+                        new Claim(ClaimTypes.Email, "joy6129@gmail.com")
+                    };
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(security_key)); // use the security key from app setting
                     var signInCred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
                     var token = new JwtSecurityToken(

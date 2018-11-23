@@ -1,29 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace webapi_jwtauthsample.Controllers
 {
-    [Authorize]
+    [Authorize(Roles="Admin")]    
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController]    
     public class ValuesController : ControllerBase
     {
         // GET api/values
         [HttpGet]
+        [AllowAnonymous]   // means every one can access, the user can access this action without authorize
         public ActionResult<IEnumerable<string>> Get()
-        {
+        {         
             return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}")]        
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            var email = User.Claims.Where(C => C.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault();
+            if (email != "joy6129@gmail.com")
+                return "You are not Joy";
+            else
+                return "value";
         }
 
         // POST api/values
